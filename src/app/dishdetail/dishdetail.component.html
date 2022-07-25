@@ -4,7 +4,7 @@
   <div fxFlex="40">
     <mat-card *ngIf="dish">
       <mat-card-title>{{ dish.name | uppercase }}</mat-card-title>
-      <img mat-card-image src={{dish.image}} alt={{dish.name}}>
+      <img mat-card-image src="{{BaseURL + dish.image}}" alt={{dish.name}}>
       <mat-card-content>{{ dish.description }}</mat-card-content>
       <mat-card-actions>
         <button mat-button [routerLink]="['/dishdetail', prev]">
@@ -24,6 +24,7 @@
   <div fxFlex="40" *ngIf="dish">
     <div>
       <h1>Comments</h1>
+      <!-- interactively show the comment if it is valid -->
       <mat-list *ngFor="let comment of dish.comments">
         <mat-list-item>
           <p matLine>{{ comment.comment }}</p>
@@ -33,7 +34,13 @@
       </mat-list>
     </div>
     <div class="form-size">
-      <p>{{ commentForm.status }} | json</p>
+      <mat-list *ngIf="commentForm.valid">
+        <mat-list-item>
+          <p matLine>{{ commentForm.value.comment }}</p>
+          <h4 matLine>{{ commentForm.value.rating }} Stars</h4>
+          <h4 matLine>-- {{ commentForm.value.author }}</h4>
+        </mat-list-item>
+      </mat-list>
       <form novalidate [formGroup]="commentForm" #cform="ngForm" (ngSubmit)="onSubmit()">
         <p>
             <mat-form-field>
@@ -54,6 +61,12 @@
         <button type="submit" mat-button class="background-primary text-floral-white"
             [disabled]="commentForm.invalid">Submit</button>
     </form>
+    </div>
+
+
+    <div fxFlex *ngIf="errMess">
+      <h2>Error</h2>
+      <h4>{{errMess}}</h4>
     </div>
   </div>
 </div>
