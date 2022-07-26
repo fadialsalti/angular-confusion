@@ -1,8 +1,8 @@
 <div class="container" fxLayout="row" fxLayout.sm="column" fxLayout.xs="column"
   fxLayoutAlign.gt-md="space-around center" fxLayoutGap="10px" fxLayoutGap.xs="0">
 
-  <div fxFlex="40">
-    <mat-card *ngIf="dish">
+  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
+    <mat-card>
       <mat-card-title>{{ dish.name | uppercase }}</mat-card-title>
       <img mat-card-image src="{{BaseURL + dish.image}}" alt={{dish.name}}>
       <mat-card-content>{{ dish.description }}</mat-card-content>
@@ -21,7 +21,7 @@
     </mat-card>
   </div>
 
-  <div fxFlex="40" *ngIf="dish">
+  <div fxFlex="40" *ngIf="dish" [@visibility]="visibility">
     <div>
       <h1>Comments</h1>
       <!-- interactively show the comment if it is valid -->
