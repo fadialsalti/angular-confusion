@@ -1,4 +1,5 @@
 export class Feedback {
+    //id: string;
     firestname: string;
     lastname: string;
     telnum: number;

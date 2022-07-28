@@ -1,12 +1,11 @@
 import { Comment } from './../shared/comment';
 import { Dish } from './../shared/dish';
-import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { DishService } from '../services/dish.service';
 import { switchMap } from 'rxjs/operators';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { trigger, state, style, animate, transition} from '@angular/animations';
 import { visibility, flyInOut, expand } from '../animations/app.animation';
 
 @Component({
@@ -25,16 +24,15 @@ import { visibility, flyInOut, expand } from '../animations/app.animation';
 })
 export class DishdetailComponent implements OnInit {
 
-  dish!: Dish;
+  dish: Dish;
   errMess: string;
-  dishIds!: string[];
-  prev!: string;
-  next!: string;
-  commentForm!: FormGroup;
+  dishIds: string[];
+  prev: string;
+  next: string;
+  commentForm: FormGroup;
   dishcopy: Dish;
   visibility = 'shown';
-
-  comment!: Comment;
+  comment: Comment;
 
   @ViewChild('cform') commentFormDirective: any;
 

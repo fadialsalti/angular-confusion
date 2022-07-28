@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Feedback, ContactType} from '../shared/feedback';
+import { Feedback, ContactType } from '../shared/feedback';
 import { flyInOut } from '../animations/app.animation';
+import { FeedbackService } from '../services/feedback.service';
 
 @Component({
   selector: 'app-contact',
@@ -18,8 +19,13 @@ import { flyInOut } from '../animations/app.animation';
 export class ContactComponent implements OnInit {
 
   feedbackForm: FormGroup;
+  errMess: string;
   feedback: Feedback;
+  feedbackCopy: Feedback;
   contactType = ContactType;
+  submitting = false;
+  submitted = false;
+  receivedForm: Feedback;
   @ViewChild('fform') feedbackFormDirective;
 
   formErrors = {
@@ -31,26 +37,28 @@ export class ContactComponent implements OnInit {
 
   validationMessages = {
     'firstname': {
-      'required':      'First Name is required.',
-      'minlength':     'First Name must be at least 2 characters long.',
-      'maxlength':     'FirstName cannot be more than 25 characters long.'
+      'required': 'First Name is required.',
+      'minlength': 'First Name must be at least 2 characters long.',
+      'maxlength': 'FirstName cannot be more than 25 characters long.'
     },
     'lastname': {
-      'required':      'Last Name is required.',
-      'minlength':     'Last Name must be at least 2 characters long.',
-      'maxlength':     'Last Name cannot be more than 25 characters long.'
+      'required': 'Last Name is required.',
+      'minlength': 'Last Name must be at least 2 characters long.',
+      'maxlength': 'Last Name cannot be more than 25 characters long.'
     },
     'telnum': {
-      'required':      'Tel. number is required.',
-      'pattern':       'Tel. number must contain only numbers.'
+      'required': 'Tel. number is required.',
+      'pattern': 'Tel. number must contain only numbers.'
     },
     'email': {
-      'required':      'Email is required.',
-      'email':         'Email not in valid format.'
+      'required': 'Email is required.',
+      'email': 'Email not in valid format.'
     },
   };
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private feedbackService: FeedbackService,
+    private fb: FormBuilder,
+    @Inject('BaseURL') private BaseURL) {
     this.createForm();
   }
 
@@ -94,18 +102,29 @@ export class ContactComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitting = true;
     this.feedback = this.feedbackForm.value;
+    this.feedbackService.submitFeedback(this.feedback)
+        .subscribe(feedback => {
+            this.feedback = feedback;
+            this.receivedForm = feedback;
+            this.submitting = false;
+            this.submitted = true;
+        });
     console.log(this.feedback);
-    this.feedbackForm.reset({
-      firstname: '',
-      lastname: '',
-      telnum: 0,
-      emai: '',
-      agree: false,
-      contacttype: 'None',
-      message: ''
-    });
-    this.feedbackFormDirective.resetForm();
-  }
+    setTimeout(() => {
+        this.submitted = false;
+        this.feedbackForm.reset({
+            firstname: '',
+            lastname: '',
+            telnum: 0,
+            email: '',
+            agree: false,
+            contacttype: 'None',
+            message: ''
+        });
+        this.feedbackFormDirective.resetForm();
+    }, 5000);
+}
 
 }
